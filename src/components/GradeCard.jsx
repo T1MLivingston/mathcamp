@@ -15,12 +15,12 @@ export default function GradeCard({ grade }) {
   return (
     <button
       onClick={handleClick}
-      className={`group relative flex flex-col items-center rounded-3xl border-4 ${grade.borderColor} ${grade.color} p-2 shadow-md cursor-pointer card-hover w-full aspect-square`}
+      className="card-hover w-full cursor-pointer focus:outline-none"
     >
       <img
         src={grade.image}
         alt={grade.animal}
-        className="w-full h-full object-contain drop-shadow-md"
+        className="w-full h-auto block drop-shadow-md rounded-2xl"
         loading="lazy"
       />
     </button>

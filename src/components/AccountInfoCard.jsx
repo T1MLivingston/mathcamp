@@ -9,10 +9,6 @@ export default function AccountInfoCard() {
 
   return (
     <div className="bg-white rounded-3xl shadow-lg border-2 border-forest-200 p-5">
-      <h3 className="text-lg font-black text-forest-800 mb-4 flex items-center gap-2">
-        🏕️ Camper Info
-      </h3>
-
       {/* Avatar */}
       <div className="flex flex-col items-center mb-4">
         {gradeInfo ? (
