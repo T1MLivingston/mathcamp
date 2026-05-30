@@ -1,6 +1,5 @@
 import { HashRouter as BrowserRouter, Routes, Route } from 'react-router-dom'
 import { StudentProvider } from './context/StudentContext'
-import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
@@ -14,7 +13,6 @@ export default function App() {
     <StudentProvider>
       <BrowserRouter>
         <div className="flex flex-col min-h-screen bg-cream">
-          <Navbar />
           <main className="flex-1">
             <Routes>
               <Route path="/"           element={<HomePage />} />
