@@ -1,10 +1,10 @@
 export const GRADES = [
-  { id: 'k',  label: 'K',   name: 'Kindergarten', animal: 'Bear with Butterfly',  image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1adb69a75f99c1489d1b5e_k.png',                                                                        bg: '#BD9CEF', textColor: 'text-purple-900' },
-  { id: '1',  label: '1st', name: '1st Grade',     animal: 'Raccoon with Flower',  image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1a49c6e8d9bae9307ebfcd_88a78868-8cb5-4153-854b-b5c4eb15f0e4.png',                                    bg: '#F8E37D', textColor: 'text-yellow-900' },
-  { id: '2',  label: '2nd', name: '2nd Grade',     animal: 'Beaver with Crown',    image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1a49e050966f1b31939790_0c27b0623df41711fa526ff66e19e323_second.png',                                  bg: '#F5D4AA', textColor: 'text-orange-900' },
-  { id: '3',  label: '3rd', name: '3rd Grade',     animal: 'Bear with Flower',     image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1adba286c77558acb438e6_third.png',                                                                     bg: '#C0EDE3', textColor: 'text-teal-900'   },
-  { id: '4',  label: '4th', name: '4th Grade',     animal: 'Little Penguin',       image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1adcf7e28d1a7b0e5a9e01_fourth.png',                                                                    bg: '#DDC1A5', textColor: 'text-amber-900'  },
-  { id: '5',  label: '5th', name: '5th Grade',     animal: 'Bear with Tube',       image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1add9ddd92b1af68ba75c8_fifth.png',                                                                      bg: '#B3BDF5', textColor: 'text-indigo-900' },
+  { id: 'k',  label: 'K',   name: 'Kindergarten', animal: 'Bear with Butterfly',  image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41e1a9d535903965987_k_no_bg.png',         bg: '#BD9CEF', textColor: 'text-purple-900' },
+  { id: '1',  label: '1st', name: '1st Grade',     animal: 'Raccoon with Flower',  image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41ee8d9bae930974008_first_no_bg.png',    bg: '#F8E37D', textColor: 'text-yellow-900' },
+  { id: '2',  label: '2nd', name: '2nd Grade',     animal: 'Beaver with Crown',    image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41e850dcc5431a2c4b6_second_no_bg.png',   bg: '#F5D4AA', textColor: 'text-orange-900' },
+  { id: '3',  label: '3rd', name: '3rd Grade',     animal: 'Bear with Flower',     image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41eb939ef8e3688d6c9_third_no_bg.png',    bg: '#C0EDE3', textColor: 'text-teal-900'   },
+  { id: '4',  label: '4th', name: '4th Grade',     animal: 'Little Penguin',       image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41e81b18d9459753af6_fourth_no_bg.png',   bg: '#DDC1A5', textColor: 'text-amber-900'  },
+  { id: '5',  label: '5th', name: '5th Grade',     animal: 'Bear with Tube',       image: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41ee28d1a7b0e5ec188_fifth_no_bg.png',    bg: '#B3BDF5', textColor: 'text-indigo-900' },
 ]
 
 export const ACTIVITIES = {
