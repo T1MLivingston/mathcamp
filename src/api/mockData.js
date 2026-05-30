@@ -6,7 +6,7 @@ export const GRADES = [
     bg: '#BD9CEF', textColor: 'text-purple-900' },
   { id: '1',  label: '1st', name: '1st Grade',     animal: 'Raccoon with Flower',
     image:   'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41ee8d9bae930974008_first_no_bg.png',
-    imageBg: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1a49c6e8d9bae9307ebfcd_88a78868-8cb5-4153-854b-b5c4eb15f0e4.png',
+    imageBg: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1a49c6e8d9bae9307ebfcd_df2fd3373a964187e232dbdbc4ab7aa1_first.png',
     pfp:     'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af582539112f0636bb0aa_first_pfp.jpeg',
     bg: '#F8E37D', textColor: 'text-yellow-900' },
   { id: '2',  label: '2nd', name: '2nd Grade',     animal: 'Beaver with Crown',
