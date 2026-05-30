@@ -25,16 +25,15 @@ export default function ActivitiesPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
 
-      {/* Back home */}
-      <Link
-        to="/"
-        className="inline-flex items-center gap-1.5 text-sm font-black text-forest-700 hover:text-forest-900 bg-white/80 hover:bg-white px-4 py-2 rounded-2xl shadow-sm border border-forest-200 mb-5 transition-all"
-      >
-        ← Home
-      </Link>
-
-      {/* Grade switcher — each image on its own color, no white */}
-      <div className="flex gap-2 flex-wrap justify-center mb-6">
+      {/* Grade switcher with back button baked in on the left */}
+      <div className="flex items-center gap-2 flex-wrap justify-center mb-6">
+        <Link
+          to="/"
+          className="inline-flex items-center justify-center text-sm font-black text-forest-700 hover:text-forest-900 bg-white/80 hover:bg-white h-14 w-14 rounded-2xl shadow-sm border border-forest-200 transition-all shrink-0"
+          title="Home"
+        >
+          ←
+        </Link>
         {GRADES.map(g => (
           <button
             key={g.id}
@@ -51,7 +50,7 @@ export default function ActivitiesPage() {
         ))}
       </div>
 
-      {/* Grade hero header — character seamlessly on its own bg color */}
+      {/* Grade hero header */}
       {gradeInfo && (
         <div
           className="rounded-3xl mb-6 flex items-end justify-between overflow-hidden shadow-sm px-6 pt-4"

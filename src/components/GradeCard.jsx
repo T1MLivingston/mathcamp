@@ -17,7 +17,7 @@ export default function GradeCard({ grade }) {
       <img
         src={grade.imageBg}
         alt={grade.animal}
-        className="w-full h-auto block rounded-2xl ring-2 ring-gray-200 group-hover:ring-4 group-hover:ring-forest-400 transition-all duration-200"
+        className="w-full h-auto block rounded-2xl ring-4 ring-gray-300 group-hover:ring-4 group-hover:ring-forest-500 shadow-sm transition-all duration-200"
         loading="lazy"
       />
     </button>
