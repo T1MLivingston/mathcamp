@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
 
-      {/* Desktop: hero + account card same height side by side */}
+      {/* Desktop: hero + account card same height. Mobile: hero full width */}
       <div className="flex flex-col lg:flex-row gap-6 mb-8 lg:items-stretch">
         <div className="flex-1 min-w-0">
           <HeroBanner />
@@ -20,12 +20,12 @@ export default function HomePage() {
       {/* Grade grid */}
       <GradeGrid />
 
-      {/* Badges — full width below grades */}
+      {/* Badges — 2 rows, full width */}
       <div className="mt-8">
         <BadgePreviewCard wide />
       </div>
 
-      {/* Mobile: account card below everything */}
+      {/* Mobile only: account card above badges already shown, show after badges */}
       <div className="mt-6 lg:hidden">
         <AccountInfoCard />
       </div>

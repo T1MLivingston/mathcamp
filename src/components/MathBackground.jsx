@@ -1,40 +1,40 @@
-import { useEffect, useRef } from 'react'
+const SYMBOLS = ['+', '−', '×', '÷', '=', '%', 'π', '∑', '√', '²', '³', '∞']
 
-const SYMBOLS = ['+', '−', '×', '÷', '=', '%', 'π', '∑', '√', '²', '³', '∞', '<', '>']
-
-// Deterministic pseudo-random from seed
 function seeded(seed) {
   let s = seed
-  return () => { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646 }
+  return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646 }
 }
 
-const ITEMS = Array.from({ length: 22 }, (_, i) => {
+const ITEMS = Array.from({ length: 24 }, (_, i) => {
   const r = seeded(i * 137 + 42)
   return {
-    symbol: SYMBOLS[Math.floor(r() * SYMBOLS.length)],
-    left: r() * 100,
-    top: r() * 100,
-    size: 1.1 + r() * 1.6,          // rem
-    duration: 6 + r() * 10,          // seconds
-    delay: r() * 8,                   // seconds
-    opacity: 0.04 + r() * 0.07,
+    symbol:   SYMBOLS[Math.floor(r() * SYMBOLS.length)],
+    left:     r() * 95,
+    top:      r() * 95,
+    size:     1.2 + r() * 2.0,
+    duration: 7  + r() * 9,
+    delay:    -(r() * 12),       // negative = start mid-cycle so they're visible immediately
+    peakOp:   0.05 + r() * 0.08,
   }
 })
 
 export default function MathBackground() {
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden>
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
       {ITEMS.map((item, i) => (
         <span
           key={i}
-          className="absolute font-black select-none"
+          className="absolute font-black select-none text-forest-700"
           style={{
             left: `${item.left}%`,
             top: `${item.top}%`,
             fontSize: `${item.size}rem`,
-            color: '#166534',
-            opacity: 0,
-            animation: `mathFloat ${item.duration}s ${item.delay}s ease-in-out infinite`,
+            animationName: 'mathFloat',
+            animationDuration: `${item.duration}s`,
+            animationDelay: `${item.delay}s`,
+            animationTimingFunction: 'ease-in-out',
+            animationIterationCount: 'infinite',
+            '--peak': item.peakOp,
           }}
         >
           {item.symbol}
