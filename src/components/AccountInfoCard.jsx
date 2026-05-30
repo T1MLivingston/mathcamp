@@ -38,7 +38,7 @@ export default function AccountInfoCard() {
         </div>
         <div className="bg-campfire-50 rounded-2xl p-3 text-center">
           <p className="text-2xl font-black text-campfire-600">{student?.streak || 0}</p>
-          <p className="text-xs font-bold text-gray-600">Day Streak 🔥</p>
+          <p className="text-xs font-bold text-gray-600">Day Streak</p>
         </div>
         <div className="bg-sky-100 rounded-2xl p-3 text-center">
           <p className="text-2xl font-black text-sky-600">{student?.activitiesCompleted || 0}</p>
@@ -55,7 +55,7 @@ export default function AccountInfoCard() {
           to="/login"
           className="mt-4 block w-full text-center bg-campfire-500 hover:bg-campfire-600 text-white font-black py-3 rounded-2xl transition-colors shadow-md"
         >
-          🚀 Start Camping!
+          Start Camping!
         </Link>
       )}
     </div>
