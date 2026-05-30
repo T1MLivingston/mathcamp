@@ -13,7 +13,7 @@ export default function AboutPage() {
 
       <div className="space-y-6">
         <div className="bg-sunshine-100 border-2 border-sunshine-400 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-xl font-black text-forest-800 mb-2">🎯 Our Mission</h2>
+          <h2 className="text-xl font-black text-forest-800 mb-2">Our Mission</h2>
           <p className="text-gray-700 font-semibold">
             Math Camp helps students in grades K–5 keep their math skills sharp all summer long.
             Through fun activities, daily check-ins, and a badge reward system, we make learning
@@ -22,27 +22,29 @@ export default function AboutPage() {
         </div>
 
         <div className="bg-sky-100 border-2 border-sky-300 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-xl font-black text-forest-800 mb-3">🎒 What You Can Do</h2>
+          <h2 className="text-xl font-black text-forest-800 mb-3">What You Can Do</h2>
           <ul className="space-y-2 font-semibold text-gray-700">
             {[
-              '📚 Complete math activities for your grade level',
-              '🏅 Earn badges for your accomplishments',
-              '🔥 Build a daily check-in streak',
-              '⭐ Collect points and track your progress',
-              '📊 View your progress on your personal dashboard',
+              'Complete math activities for your grade level',
+              'Earn badges for your accomplishments',
+              'Build a daily check-in streak',
+              'Collect points and track your progress',
+              'View your progress on your personal dashboard',
             ].map((item, i) => (
-              <li key={i} className="flex items-start gap-2">{item}</li>
+              <li key={i} className="flex items-start gap-2">
+                <span className="text-forest-500 font-black mt-0.5">→</span>
+                {item}
+              </li>
             ))}
           </ul>
         </div>
 
         <div className="bg-forest-50 border-2 border-forest-300 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-xl font-black text-forest-800 mb-3">🐾 Meet the Campers</h2>
+          <h2 className="text-xl font-black text-forest-800 mb-4">Meet the Campers</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {GRADES.map(g => (
-              <div key={g.id} className={`${g.color} rounded-2xl p-2 text-center`}>
-                <img src={g.image} alt={g.animal} className="h-16 object-contain mx-auto" />
-                <p className={`font-black text-sm ${g.textColor}`}>{g.label}</p>
+              <div key={g.id} className="rounded-2xl overflow-hidden">
+                <img src={g.image} alt={g.animal} className="w-full h-auto object-contain" />
               </div>
             ))}
           </div>
