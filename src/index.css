@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Nunito', system-ui, sans-serif;
+  background-color: #faf9f6;
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+  }
+  .card-hover {
+    @apply transition-transform duration-200 hover:scale-105 hover:shadow-xl;
+  }
+}
