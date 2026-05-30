@@ -89,12 +89,9 @@ export default function AccountInfoCard({ matchRef }) {
     <div className="bg-white rounded-3xl shadow-lg border-2 border-forest-200 p-5 h-full flex flex-col">
       {/* Circle avatar */}
       <div className="flex flex-col items-center mb-4">
-        <div
-          className="w-24 h-24 rounded-full overflow-hidden border-4 border-sunshine-300 shadow-md flex items-center justify-center"
-          style={{ backgroundColor: gradeInfo?.bg || '#fef9c3' }}
-        >
+        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-sunshine-300 shadow-md bg-sunshine-100 flex items-center justify-center">
           {gradeInfo ? (
-            <img src={gradeInfo.image} alt={gradeInfo.animal} className="w-full h-full object-contain p-1" />
+            <img src={gradeInfo.pfp} alt={gradeInfo.animal} className="w-full h-full object-cover" />
           ) : (
             <span className="text-4xl">🏕️</span>
           )}
