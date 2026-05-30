@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 import { MOCK_STUDENT, BADGES } from '../api/mockData'
 
 const StudentContext = createContext(null)
-
 const STORAGE_KEY = 'mathcamp_student'
 
 export function StudentProvider({ children }) {
@@ -10,25 +9,18 @@ export function StudentProvider({ children }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       return saved ? JSON.parse(saved) : null
-    } catch {
-      return null
-    }
+    } catch { return null }
   })
 
-  const [completedActivities, setCompletedActivities] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('mathcamp_completed') || '[]')
-    } catch {
-      return []
-    }
+  // activityCounts: { [activityId]: number }
+  const [activityCounts, setActivityCounts] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('mathcamp_counts') || '{}') }
+    catch { return {} }
   })
 
   const [checkIns, setCheckIns] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('mathcamp_checkins') || '[]')
-    } catch {
-      return []
-    }
+    try { return JSON.parse(localStorage.getItem('mathcamp_checkins') || '[]') }
+    catch { return [] }
   })
 
   useEffect(() => {
@@ -36,36 +28,40 @@ export function StudentProvider({ children }) {
   }, [student])
 
   useEffect(() => {
-    localStorage.setItem('mathcamp_completed', JSON.stringify(completedActivities))
-  }, [completedActivities])
+    localStorage.setItem('mathcamp_counts', JSON.stringify(activityCounts))
+  }, [activityCounts])
 
   useEffect(() => {
     localStorage.setItem('mathcamp_checkins', JSON.stringify(checkIns))
   }, [checkIns])
 
-  function login(displayName, grade) {
-    const id = 'MathKid' + Math.floor(Math.random() * 90 + 10)
-    const newStudent = {
+  function login(email, grade, displayName) {
+    const existing = student && student.email === email
+    if (existing) {
+      // update grade if changed
+      setStudent(s => ({ ...s, grade, display_name: displayName || s.display_name }))
+      return
+    }
+    const id = 'Camper' + Math.floor(Math.random() * 9000 + 1000)
+    setStudent({
       ...MOCK_STUDENT,
       student_id: id,
-      display_name: displayName || 'Guest Camper',
+      display_name: displayName || email.split('@')[0] || 'Camper',
+      email,
       grade,
-    }
-    setStudent(newStudent)
-    return newStudent
+    })
   }
 
   function logout() {
     setStudent(null)
-    setCompletedActivities([])
+    setActivityCounts({})
     setCheckIns([])
     localStorage.clear()
   }
 
   function completeActivity(activityId, points, isFraction = false) {
-    if (completedActivities.includes(activityId)) return
-    const updated = [...completedActivities, activityId]
-    setCompletedActivities(updated)
+    const newCounts = { ...activityCounts, [activityId]: (activityCounts[activityId] || 0) + 1 }
+    setActivityCounts(newCounts)
     setStudent(s => ({
       ...s,
       points: s.points + points,
@@ -91,35 +87,31 @@ export function StudentProvider({ children }) {
   }
 
   function earnedBadges() {
-    if (!student) return []
+    if (!student) return BADGES.map(b => ({ ...b, earned: false }))
+    const maxActivityRepeats = Math.max(0, ...Object.values(activityCounts))
     const stats = {
       checkIns: student.checkIns || 0,
       streak: student.streak || 0,
       activitiesCompleted: student.activitiesCompleted || 0,
       completedFraction: student.completedFraction || false,
       completedGrade: student.completedGrade || false,
-      badges: 0,
       points: student.points || 0,
+      maxActivityRepeats,
+      badges: 0,
     }
-    // Always earn first_camper
     stats.badges = BADGES.filter(b => b.condition(stats)).length
     return BADGES.map(b => ({ ...b, earned: b.condition(stats) }))
   }
+
+  const completedActivities = Object.keys(activityCounts).filter(id => activityCounts[id] > 0)
 
   const hasCheckedInToday = checkIns.length > 0 &&
     new Date(checkIns[0].date).toDateString() === new Date().toDateString()
 
   return (
     <StudentContext.Provider value={{
-      student,
-      completedActivities,
-      checkIns,
-      login,
-      logout,
-      completeActivity,
-      submitCheckIn,
-      earnedBadges,
-      hasCheckedInToday,
+      student, completedActivities, activityCounts, checkIns,
+      login, logout, completeActivity, submitCheckIn, earnedBadges, hasCheckedInToday,
     }}>
       {children}
     </StudentContext.Provider>
