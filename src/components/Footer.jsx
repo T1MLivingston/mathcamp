@@ -17,9 +17,8 @@ export default function Footer() {
     <footer className="bg-forest-800 text-forest-200 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col items-center gap-4">
-          <p className="font-black text-sunshine-300 text-xl">⛺ Math Camp</p>
+          <p className="font-black text-sunshine-300 text-xl">Math Camp</p>
 
-          {/* Nav links */}
           <nav className="flex flex-wrap justify-center gap-2">
             {links.map(l => (
               <Link
