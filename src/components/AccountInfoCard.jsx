@@ -89,12 +89,12 @@ export default function AccountInfoCard({ matchRef }) {
     <div className="bg-white rounded-3xl shadow-lg border-2 border-forest-200 p-5 h-full flex flex-col">
       {/* Circle avatar */}
       <div className="flex flex-col items-center mb-4">
-        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-sunshine-300 shadow-md bg-sunshine-100 flex items-center justify-center">
-          {gradeInfo ? (
-            <img src={gradeInfo.pfp} alt={gradeInfo.animal} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-4xl">🏕️</span>
-          )}
+        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-sunshine-300 shadow-md bg-sunshine-100">
+          <img
+            src={gradeInfo?.pfp || 'https://i2c.seadn.io/ethereum/0x5e52d41f0e40d7cdb204db0d09659846f7404547/11bba7b976c8cac1f08fd7c78ba29a/a911bba7b976c8cac1f08fd7c78ba29a.png?w=1000'}
+            alt={gradeInfo?.animal || 'Guest Camper'}
+            className="w-full h-full object-cover"
+          />
         </div>
         <p className="font-black text-xl text-forest-800 mt-3">
           {student?.display_name || 'Guest Camper'}
