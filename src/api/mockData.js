@@ -24,7 +24,7 @@ export const GRADES = [
     imageBg: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1adcf7e28d1a7b0e5a9e01_fourth.png',
     pfp:     'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af5d8929285f0a66a7465_fourth_pfp.png',
     bg: '#DDC1A5', textColor: 'text-amber-900'  },
-  { id: '5',  label: '5th', name: '5th Grade',     animal: 'Bear with Tube',
+  { id: '5',  label: '5th', name: '5th Grade',     animal: 'Frog',
     image:   'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af41ee28d1a7b0e5ec188_fifth_no_bg.png',
     imageBg: 'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1add9ddd92b1af68ba75c8_fifth.png',
     pfp:     'https://cdn.prod.website-files.com/64aa957da446d8dc44869f81/6a1af4cefee538e890ac9b34_fifth_pfp.jpeg',
