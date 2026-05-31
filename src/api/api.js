@@ -1,5 +1,5 @@
-// API layer — swap GAS_URL to connect to Google Apps Script
-const GAS_URL = null // Set to your deployed Apps Script web app URL
+// API layer — URL injected at build time via VITE_GAS_URL secret
+const GAS_URL = import.meta.env.VITE_GAS_URL || null
 
 async function gasRequest(action, payload = {}) {
   if (!GAS_URL) return null
