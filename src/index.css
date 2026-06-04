@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes diceShake {
+  0%   { transform: rotate(0deg)   translate(0, 0); }
+  15%  { transform: rotate(-18deg) translate(-4px, -3px); }
+  30%  { transform: rotate(14deg)  translate(3px, -5px); }
+  45%  { transform: rotate(-10deg) translate(-2px, 2px); }
+  60%  { transform: rotate(16deg)  translate(4px, -2px); }
+  75%  { transform: rotate(-8deg)  translate(-3px, 3px); }
+  90%  { transform: rotate(6deg)   translate(2px, -1px); }
+  100% { transform: rotate(0deg)   translate(0, 0); }
+}
+.animate-dice-shake {
+  animation: diceShake 0.55s ease-in-out;
+}
+
 body {
   font-family: 'Nunito', system-ui, sans-serif;
   background-color: #faf9f6;

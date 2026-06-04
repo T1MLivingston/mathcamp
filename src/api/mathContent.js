@@ -28,101 +28,147 @@ function nearDistractors(correct, count = 3, spread = 4) {
 }
 
 // ─── KINDERGARTEN ───────────────────────────────────────────────
+
+const COUNTING_ITEMS = [
+  { emoji: '🍎', word: 'apples' },
+  { emoji: '⭐', word: 'stars' },
+  { emoji: '🌸', word: 'flowers' },
+  { emoji: '🐸', word: 'frogs' },
+  { emoji: '🦋', word: 'butterflies' },
+  { emoji: '🍭', word: 'lollipops' },
+  { emoji: '🐥', word: 'chicks' },
+  { emoji: '🍄', word: 'mushrooms' },
+]
+
 function kCounting() {
   const n = rnd(1, 20)
-  const symbol = ['⬛', '🔴', '🔵', '⭐', '🌸', '🍎'][rnd(0, 5)]
-  const row = symbol.repeat(n)
+  const item = COUNTING_ITEMS[rnd(0, COUNTING_ITEMS.length - 1)]
   const { choices, correct } = makeChoices(n, nearDistractors(n, 3, 3))
-  return { text: `How many ${symbol} are there?\n${row}`, choices, correct }
-}
-
-const SHAPES_2D = ['circle', 'square', 'triangle', 'rectangle', 'hexagon']
-const SHAPES_3D = ['cube', 'sphere', 'cone', 'cylinder']
-
-function kShape() {
-  const all = [...SHAPES_2D, ...SHAPES_3D]
-  const answer = all[rnd(0, all.length - 1)]
-  const wrongs = shuffle(all.filter(s => s !== answer)).slice(0, 3)
-  const { choices, correct } = makeChoices(answer, wrongs)
-  const dim = SHAPES_3D.includes(answer) ? '3D' : '2D'
-  return { text: `Which ${dim} shape has ${describeShape(answer)}?`, choices, correct }
-}
-
-function describeShape(s) {
-  const d = {
-    circle: '0 sides and is perfectly round',
-    square: '4 equal sides',
-    triangle: '3 sides',
-    rectangle: '4 sides (2 long, 2 short)',
-    hexagon: '6 sides',
-    cube: '6 square faces',
-    sphere: 'a perfectly round surface',
-    cone: 'a circular base and a point at the top',
-    cylinder: '2 circular ends and a curved side',
+  return {
+    type: 'counting',
+    data: { count: n, emoji: item.emoji, word: item.word },
+    text: `How many ${item.word} are there?`,
+    choices,
+    correct,
   }
-  return d[s] || s
 }
 
+// Fruit Sorting — replaces Shape Safari
+const BASKET_FRUITS = [
+  { emoji: '🍎', word: 'apples' },
+  { emoji: '🍊', word: 'oranges' },
+  { emoji: '🍇', word: 'grapes' },
+  { emoji: '🍓', word: 'strawberries' },
+  { emoji: '🍌', word: 'bananas' },
+  { emoji: '🍋', word: 'lemons' },
+]
+
+function kFruitSort() {
+  // Pick one target fruit and 1–2 other fruits
+  const fruits = shuffle(BASKET_FRUITS).slice(0, 3)
+  const targetFruit = fruits[0]
+  const targetCount = rnd(2, 6)
+  // Build a shuffled list of items with targetCount of target + 1–4 of others
+  const items = []
+  for (let i = 0; i < targetCount; i++) items.push(targetFruit.emoji)
+  fruits.slice(1).forEach(f => {
+    const extra = rnd(1, 4)
+    for (let i = 0; i < extra; i++) items.push(f.emoji)
+  })
+  const shuffledItems = shuffle(items)
+  const { choices, correct } = makeChoices(targetCount, nearDistractors(targetCount, 3, 2).filter(x => x > 0 && x <= 10))
+  return {
+    type: 'fruit-sort',
+    data: { items: shuffledItems, targetEmoji: targetFruit.emoji, targetWord: targetFruit.word, count: targetCount },
+    text: `How many ${targetFruit.word} are in the basket?`,
+    choices,
+    correct,
+  }
+}
+
+// Number Bonds — visual tree diagram
 function kNumberBond() {
-  const total = rnd(2, 10)
+  const total = rnd(3, 10)
   const part1 = rnd(1, total - 1)
   const part2 = total - part1
-  const { choices, correct } = makeChoices(part2, nearDistractors(part2, 3, 3))
-  return { text: `${total} = ${part1} + ?`, choices, correct }
+  // Sometimes hide part1, sometimes part2
+  const hideRight = Math.random() > 0.4
+  const hiddenPart = hideRight ? part2 : part1
+  const shownPart = hideRight ? part1 : part2
+  const { choices, correct } = makeChoices(hiddenPart, nearDistractors(hiddenPart, 3, 3).filter(x => x > 0 && x < total))
+  return {
+    type: 'number-bond',
+    data: { total, left: hideRight ? part1 : '?', right: hideRight ? '?' : part2 },
+    text: `${total} = ${shownPart} + ?`,
+    choices,
+    correct,
+  }
 }
 
 function kQuiz() {
   const q = rnd(0, 4)
   if (q === 0) return kCounting()
-  if (q === 1) return kShape()
+  if (q === 1) return kFruitSort()
   if (q === 2) return kNumberBond()
   if (q === 3) {
     const a = rnd(1, 10), b = rnd(1, 10)
     const ans = a > b ? a : b
-    const label = a > b ? a : b
-    const { choices, correct } = makeChoices(label, nearDistractors(label, 3, 3))
+    const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 3).filter(x => x > 0))
     return { text: `Which number is bigger: ${a} or ${b}?`, choices, correct }
   }
-  // teen numbers
   const n = rnd(11, 19)
-  const { choices, correct } = makeChoices(n, nearDistractors(n, 3, 2))
+  const { choices, correct } = makeChoices(n, nearDistractors(n, 3, 2).filter(x => x > 0))
   return { text: `What number comes right after ${n - 1}?`, choices, correct }
 }
 
 // ─── 1ST GRADE ──────────────────────────────────────────────────
-function grade1Add() {
-  const a = rnd(1, 10), b = rnd(1, 10 - a + 1)
-  const ans = a + b
-  const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 3))
-  return { text: `${a} + ${b} = ?`, choices, correct }
+
+// Addition — visual part-part-whole bond boxes
+function grade1BondBox() {
+  const a = rnd(1, 9), b = rnd(1, 11 - a)
+  const sum = a + b
+  // Randomly hide sum, a, or b (weighted toward hiding sum most)
+  const r = rnd(0, 2)
+  const missing = r === 0 ? 'sum' : r === 1 ? 'b' : 'a'
+  const answer = missing === 'sum' ? sum : missing === 'b' ? b : a
+  const { choices, correct } = makeChoices(answer, nearDistractors(answer, 3, 3).filter(x => x > 0))
+  const label = missing === 'sum' ? `${a} + ${b} = ?` : missing === 'b' ? `${a} + ? = ${sum}` : `? + ${b} = ${sum}`
+  return {
+    type: 'bond-box',
+    data: { a, b, sum, missing },
+    text: label,
+    choices,
+    correct,
+  }
+}
+
+// Dice Addition — roll dice and add them up
+function grade1Dice() {
+  const numDice = rnd(2, 3)
+  const dice = Array.from({ length: numDice }, () => rnd(1, 6))
+  const total = dice.reduce((s, d) => s + d, 0)
+  const { choices, correct } = makeChoices(total, nearDistractors(total, 3, 3).filter(x => x > 0))
+  return {
+    type: 'dice-add',
+    data: { dice, total },
+    text: `What is ${dice.join(' + ')}?`,
+    choices,
+    correct,
+  }
 }
 
 function grade1Sub() {
   const b = rnd(1, 10), a = rnd(b, 20)
   const ans = a - b
-  const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 3))
+  const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 3).filter(x => x >= 0))
   return { text: `${a} − ${b} = ?`, choices, correct }
-}
-
-function grade1Shape() {
-  const questions = [
-    { text: 'A shape divided into 2 equal parts has how many halves?', ans: '2', wrongs: ['1', '3', '4'] },
-    { text: 'A shape divided into 4 equal parts — each part is called a...?', ans: 'quarter', wrongs: ['half', 'third', 'whole'] },
-    { text: 'How many sides does a triangle have?', ans: '3', wrongs: ['4', '5', '6'] },
-    { text: 'A square has how many equal sides?', ans: '4', wrongs: ['3', '5', '6'] },
-    { text: 'Which shape has NO corners?', ans: 'circle', wrongs: ['square', 'triangle', 'rectangle'] },
-    { text: 'A rectangle has how many sides?', ans: '4', wrongs: ['3', '5', '6'] },
-  ]
-  const q = questions[rnd(0, questions.length - 1)]
-  const { choices, correct } = makeChoices(q.ans, q.wrongs)
-  return { text: q.text, choices, correct }
 }
 
 function grade1Quiz() {
   const pick = rnd(0, 4)
-  if (pick === 0) return grade1Add()
+  if (pick === 0) return grade1BondBox()
   if (pick === 1) return grade1Sub()
-  if (pick === 2) return grade1Shape()
+  if (pick === 2) return grade1Dice()
   if (pick === 3) {
     const hours = rnd(1, 12)
     const half = Math.random() > 0.5
@@ -131,7 +177,6 @@ function grade1Quiz() {
     const { choices, correct } = makeChoices(ans, wrongs)
     return { text: `The clock shows the hour hand on ${hours} and minute hand on ${half ? 6 : 12}. What time is it?`, choices, correct }
   }
-  // coins
   const coins = [
     { name: 'penny', value: 1 },
     { name: 'nickel', value: 5 },
@@ -139,7 +184,7 @@ function grade1Quiz() {
     { name: 'quarter', value: 25 },
   ]
   const coin = coins[rnd(0, 3)]
-  const { choices, correct } = makeChoices(`${coin.value}¢`, [`${coin.value + 1}¢`, `${coin.value - 1 >= 0 ? coin.value - 1 : coin.value + 2}¢`, `${coin.value + 5}¢`])
+  const { choices, correct } = makeChoices(`${coin.value}¢`, [`${coin.value + 1}¢`, `${coin.value >= 2 ? coin.value - 1 : coin.value + 2}¢`, `${coin.value + 5}¢`])
   return { text: `How much is a ${coin.name} worth?`, choices, correct }
 }
 
@@ -202,7 +247,6 @@ function grade2Measurement() {
     const { choices, correct } = makeChoices(ans, wrongs)
     return { text: `You have $${(total / 100).toFixed(2)} and spend $${(spent / 100).toFixed(2)}. How much change do you get?`, choices, correct }
   }
-  // compare lengths
   const a = rnd(1, 20), b = rnd(1, 20)
   const longer = a >= b ? a : b
   const { choices, correct } = makeChoices(longer, [a < b ? a : b, longer + 2, longer - 1 >= 1 ? longer - 1 : longer + 3])
@@ -220,12 +264,10 @@ function grade2Quiz() {
     return { text: `Is ${n} odd or even?`, choices, correct }
   }
   if (pick === 3) return grade2Measurement()
-  // bar graph
   const items = ['Dogs', 'Cats', 'Birds']
   const counts = [rnd(2, 8), rnd(2, 8), rnd(2, 8)]
   const maxIdx = counts.indexOf(Math.max(...counts))
-  const { choices, correct } = makeChoices(items[maxIdx], items.filter((_, i) => i !== maxIdx).concat([items[maxIdx] + '?']))
-  return { text: `A graph shows: Dogs=${counts[0]}, Cats=${counts[1]}, Birds=${counts[2]}. Which has the most?`, choices, correct: choices.indexOf(items[maxIdx]) }
+  return { text: `A graph shows: Dogs=${counts[0]}, Cats=${counts[1]}, Birds=${counts[2]}. Which has the most?`, choices: shuffle(items), correct: shuffle(items).indexOf(items[maxIdx]) }
 }
 
 // ─── 3RD GRADE ──────────────────────────────────────────────────
@@ -255,15 +297,12 @@ function grade3Fraction() {
     return { text: `A pizza has ${d} equal slices. You eat ${n} slices. What fraction did you eat?`, choices, correct }
   }
   if (type === 1) {
-    // comparing fractions with same denominator
     const n2 = rnd(1, d - 1)
     const bigger = n >= n2 ? `${n}/${d}` : `${n2}/${d}`
     const { choices, correct } = makeChoices(bigger, [`${n < n2 ? n : n2}/${d}`, `${n + 1}/${d}`, `${d}/${n}`])
     return { text: `Which fraction is larger: ${n}/${d} or ${n2}/${d}?`, choices, correct }
   }
-  // number line position
-  const ans2 = n
-  const { choices, correct } = makeChoices(ans2, nearDistractors(ans2, 3, 2).filter(x => x > 0 && x < d))
+  const { choices, correct } = makeChoices(n, nearDistractors(n, 3, 2).filter(x => x > 0 && x < d))
   return { text: `On a number line from 0 to 1, divided into ${d} equal parts, where is ${n}/${d}? (How many parts from 0?)`, choices, correct }
 }
 
@@ -273,13 +312,11 @@ function grade3Quiz() {
   if (pick === 1) return grade3Divide()
   if (pick === 2) return grade3Fraction()
   if (pick === 3) {
-    // area
     const w = rnd(2, 8), h = rnd(2, 8)
     const ans = w * h
     const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 5))
     return { text: `What is the area of a rectangle ${w} units wide and ${h} units tall?`, choices, correct }
   }
-  // perimeter
   const w = rnd(2, 8), h = rnd(2, 8)
   const ans = 2 * (w + h)
   const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 4))
@@ -290,7 +327,6 @@ function grade3Quiz() {
 function grade4Fraction() {
   const type = rnd(0, 2)
   if (type === 0) {
-    // equivalent fractions
     const n = rnd(1, 4), d = rnd(2, 6)
     const mult = rnd(2, 4)
     const ans = `${n * mult}/${d * mult}`
@@ -299,18 +335,13 @@ function grade4Fraction() {
     return { text: `Which fraction is equivalent to ${n}/${d}?`, choices, correct }
   }
   if (type === 1) {
-    // add same denominator
     const d = rnd(3, 8)
     const a = rnd(1, d - 1), b = rnd(1, d - a)
     const sum = a + b
     const ans = sum >= d ? `${Math.floor(sum / d)} ${sum % d}/${d}` : `${sum}/${d}`
-    const wrong1 = `${a + b + 1}/${d}`
-    const wrong2 = `${a}/${d + b}`
-    const wrong3 = sum >= d ? `${sum}/${d}` : `${sum + 1}/${d}`
-    const { choices, correct } = makeChoices(ans, [wrong1, wrong2, wrong3])
+    const { choices, correct } = makeChoices(ans, [`${a + b + 1}/${d}`, `${a}/${d + b}`, sum >= d ? `${sum}/${d}` : `${sum + 1}/${d}`])
     return { text: `${a}/${d} + ${b}/${d} = ?`, choices, correct }
   }
-  // subtract same denominator
   const d = rnd(3, 8)
   const a = rnd(2, d - 1), b = rnd(1, a)
   const diff = a - b
@@ -322,13 +353,11 @@ function grade4Fraction() {
 function grade4Multiply() {
   const type = rnd(0, 1)
   if (type === 0) {
-    // 4-digit × 1-digit
     const a = rnd(100, 999), b = rnd(2, 9)
     const ans = a * b
     const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 50))
     return { text: `${a} × ${b} = ?`, choices, correct }
   }
-  // 2-digit × 2-digit
   const a = rnd(11, 30), b = rnd(11, 25)
   const ans = a * b
   const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 20))
@@ -373,9 +402,8 @@ function grade4Quiz() {
   }
   if (pick === 3) {
     const n = rnd(1, 9)
-    const d = 10
     const { choices, correct } = makeChoices(`0.${n}`, [`${n}.0`, `0.0${n}`, `${n}/100`])
-    return { text: `What decimal equals ${n}/${d}?`, choices, correct }
+    return { text: `What decimal equals ${n}/10?`, choices, correct }
   }
   return grade4Angles()
 }
@@ -384,7 +412,6 @@ function grade4Quiz() {
 function grade5FractionOps() {
   const type = rnd(0, 2)
   if (type === 0) {
-    // multiply fractions
     const n1 = rnd(1, 4), d1 = rnd(2, 6), n2 = rnd(1, 4), d2 = rnd(2, 6)
     const nr = n1 * n2, dr = d1 * d2
     const g = gcd(nr, dr)
@@ -393,7 +420,6 @@ function grade5FractionOps() {
     return { text: `${n1}/${d1} × ${n2}/${d2} = ?`, choices, correct }
   }
   if (type === 1) {
-    // add unlike denominators
     const d1 = rnd(2, 5), d2 = rnd(2, 5)
     const n1 = rnd(1, d1 - 1), n2 = rnd(1, d2 - 1)
     const lcd = d1 * d2 / gcd(d1, d2)
@@ -403,12 +429,11 @@ function grade5FractionOps() {
     const { choices, correct } = makeChoices(ans, [`${n1 + n2}/${d1 + d2}`, `${n1 + n2}/${d1 * d2}`, `${nr + 1}/${lcd}`])
     return { text: `${n1}/${d1} + ${n2}/${d2} = ?`, choices, correct }
   }
-  // divide unit fraction
   const d = rnd(2, 8)
   const whole = rnd(2, 6)
   const ans = `${whole * d}`
   const { choices, correct } = makeChoices(ans, [`${whole / d}`, `${d * whole + 1}`, `${whole + d}`])
-  return { text: `1/${d} ÷ 1/${whole * d} = ? (How many 1/${whole * d}s fit in 1/${d}?)`, choices, correct }
+  return { text: `1/${d} ÷ 1/${whole * d} = ?`, choices, correct }
 }
 
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
@@ -416,26 +441,22 @@ function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
 function grade5Decimals() {
   const type = rnd(0, 2)
   if (type === 0) {
-    // multiply decimals
     const a = rnd(2, 9), b = rnd(2, 9)
-    const d1 = rnd(1, 3), d2 = rnd(1, 2)
+    const d1 = rnd(1, 2), d2 = 1
     const fa = a / Math.pow(10, d1), fb = b / Math.pow(10, d2)
     const ans = parseFloat((fa * fb).toFixed(d1 + d2))
-    const { choices, correct } = makeChoices(String(ans), [String(ans + 0.1), String(ans * 10), String(ans - 0.1)])
+    const { choices, correct } = makeChoices(String(ans), [String(ans + 0.1), String(ans * 10), String(parseFloat((ans - 0.1).toFixed(d1 + d2)))])
     return { text: `${fa} × ${fb} = ?`, choices, correct }
   }
   if (type === 1) {
-    // round to thousandths
     const n = parseFloat((rnd(1000, 9999) / 1000).toFixed(4))
     const ans = n.toFixed(3)
     const { choices, correct } = makeChoices(ans, [(n + 0.001).toFixed(3), (n - 0.001).toFixed(3), n.toFixed(2)])
     return { text: `Round ${n} to the nearest thousandth.`, choices, correct }
   }
-  // place value to 0.001
   const n = parseFloat((rnd(1, 99) / 1000).toFixed(3))
   const str = n.toFixed(3)
-  const parts = str.split('.')
-  const thousandths = parseInt(parts[1][2])
+  const thousandths = parseInt(str[str.length - 1])
   const { choices, correct } = makeChoices(thousandths, nearDistractors(thousandths, 3, 2).filter(x => x >= 0 && x <= 9))
   return { text: `In the number ${n}, what digit is in the THOUSANDTHS place?`, choices, correct }
 }
@@ -448,7 +469,6 @@ function grade5Volume() {
     const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 10))
     return { text: `What is the volume of a box that is ${l} long, ${w} wide, and ${h} tall? (V = l × w × h)`, choices, correct }
   }
-  // coordinate grid
   const x = rnd(1, 9), y = rnd(1, 9)
   const { choices, correct } = makeChoices(`(${x}, ${y})`, [`(${y}, ${x})`, `(${x + 1}, ${y})`, `(${x}, ${y + 1})`])
   return { text: `A point is ${x} units right and ${y} units up from the origin. What are its coordinates?`, choices, correct }
@@ -465,7 +485,6 @@ function grade5Quiz() {
     const { choices, correct } = makeChoices(ans, nearDistractors(ans, 3, 8))
     return { text: `Volume of a ${l} × ${w} × ${h} rectangular prism?`, choices, correct }
   }
-  // order of operations
   const a = rnd(2, 5), b = rnd(2, 4), c = rnd(1, 5)
   const ans = a + b * c
   const wrong = (a + b) * c
@@ -477,7 +496,7 @@ function grade5Quiz() {
 export const GRADE_ACTIVITIES = {
   k: {
     color: '#9B59B6',
-    colorLight: '#e8d5f5',
+    colorLight: '#f0e3fa',
     activities: [
       {
         id: 'k-a1',
@@ -488,16 +507,16 @@ export const GRADE_ACTIVITIES = {
       },
       {
         id: 'k-a2',
-        title: 'Shape Safari',
-        description: 'Identify 2D and 3D shapes.',
-        goals: ['Name 2D shapes: circle, square, triangle, rectangle, hexagon', 'Name 3D shapes: cube, sphere, cone, cylinder', 'Describe shapes by their sides and faces'],
-        generate: () => Array.from({ length: 6 }, kShape),
+        title: 'Fruit Basket',
+        description: 'Sort colorful fruits and count how many of each kind!',
+        goals: ['Sort objects by type', 'Count items in a group', 'Compare groups of objects'],
+        generate: () => Array.from({ length: 6 }, kFruitSort),
       },
       {
         id: 'k-a3',
         title: 'Number Bonds',
         description: 'Break numbers 1–10 into two parts.',
-        goals: ['Decompose numbers up to 10', 'Find missing addends', 'Understand part-part-whole relationships'],
+        goals: ['Decompose numbers up to 10', 'Find missing addends', 'Understand part-part-whole'],
         generate: () => Array.from({ length: 6 }, kNumberBond),
       },
     ],
@@ -516,23 +535,23 @@ export const GRADE_ACTIVITIES = {
       {
         id: '1-a1',
         title: 'Addition Adventure',
-        description: 'Add two numbers with sums up to 20.',
-        goals: ['Add within 20', 'Use counting-on strategies', 'Understand the + and = symbols'],
-        generate: () => Array.from({ length: 6 }, grade1Add),
+        description: 'Add two numbers using part-part-whole bond boxes.',
+        goals: ['Add within 20', 'Use part-part-whole thinking', 'Find missing addends'],
+        generate: () => Array.from({ length: 6 }, grade1BondBox),
       },
       {
         id: '1-a2',
+        title: 'Dice Addition',
+        description: 'Roll the dice and add up the numbers!',
+        goals: ['Add 2–3 numbers together', 'Count dots on dice faces', 'Practice mental addition'],
+        generate: () => Array.from({ length: 6 }, grade1Dice),
+      },
+      {
+        id: '1-a3',
         title: 'Subtraction Station',
         description: 'Subtract within 20.',
         goals: ['Subtract within 20', 'Use counting-back strategies', 'Relate subtraction to addition'],
         generate: () => Array.from({ length: 6 }, grade1Sub),
-      },
-      {
-        id: '1-a3',
-        title: 'Shape Builder',
-        description: 'Identify 2D/3D shapes and understand halves and quarters.',
-        goals: ['Identify 2D and 3D shapes', 'Understand equal shares (halves, quarters)', 'Describe shape attributes'],
-        generate: () => Array.from({ length: 6 }, grade1Shape),
       },
     ],
     quiz: {
